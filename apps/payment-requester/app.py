@@ -14,7 +14,9 @@ from opentelemetry.trace import Status, StatusCode
 resource = Resource.create({"service.name": "payment-requester", "team": "PMSO"})
 
 # otlp_exporter = ConsoleSpanExporter()
-otlp_exporter = OTLPSpanExporter(endpoint="http://jaeger:4318/v1/traces")
+otlp_exporter = OTLPSpanExporter(
+    endpoint="http://jaeger.jaeger.svc.cluster.local:4318/v1/traces"
+)
 provider = TracerProvider(resource=resource)
 processor = SimpleSpanProcessor(otlp_exporter)
 provider.add_span_processor(processor)

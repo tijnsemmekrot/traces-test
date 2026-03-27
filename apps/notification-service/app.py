@@ -8,7 +8,9 @@ from opentelemetry.sdk.resources import Resource
 
 resource = Resource.create({"service.name": "notification-service"})
 
-otlp_exporter = OTLPSpanExporter(endpoint="http://jaeger:4318/v1/traces")
+otlp_exporter = OTLPSpanExporter(
+    endpoint="http://jaeger.jaeger.svc.cluster.local:4318/v1/traces"
+)
 provider = TracerProvider(resource=resource)
 processor = SimpleSpanProcessor(otlp_exporter)
 provider.add_span_processor(processor)
