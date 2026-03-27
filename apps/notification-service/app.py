@@ -24,7 +24,7 @@ def home():
 
 
 @app.route("/send-notification")
-@trace.tracer.start_as_current_span("send-notification")
+@tracer.start_as_current_span("send-notification")
 def send_notification():
     context = extract(request.headers)  # ← Extract traceparent
     with tracer.start_as_current_span("send-notification", context=context) as span:
