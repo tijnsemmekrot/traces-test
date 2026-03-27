@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:tijnsemmekrot/traces-test.git
+    repoURL: https://github.com/tijnsemmekrot/traces-test.git
     targetRevision: HEAD
     path: apps/notification-service
   destination:
