@@ -23,6 +23,8 @@ spec:
           env:
             - name: PAYMENT_PROCESSOR_URL
               value: "http://payment-processor:8080"
+            - name: OTEL_TRACES_SAMPLER_ARG
+              value: "0.1"
           livenessProbe:
             httpGet:
               path: /health
