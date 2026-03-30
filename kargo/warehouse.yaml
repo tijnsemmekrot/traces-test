@@ -6,17 +6,22 @@ metadata:
 spec:
   subscriptions:
     - image:
-        repoURL: index.docker.io/tijnsemmekrot/traces-test
-        allowTags: "^account-service-.*$"
+        repoURL: tijnsemmekrot/traces-test
+        allowTags: "^account-service-.*"
+        imagePullSecrets: [{ name: dockerhub-creds }]
     - image:
-        repoURL: index.docker.io/tijnsemmekrot/traces-test
-        allowTags: "^fraud-detector-.*$"
+        repoURL: tijnsemmekrot/traces-test
+        allowTags: "^fraud-detector-.*"
+        imagePullSecrets: [{ name: dockerhub-creds }]
     - image:
-        repoURL: index.docker.io/tijnsemmekrot/traces-test
-        allowTags: "^notification-service-.*$"
+        repoURL: tijnsemmekrot/traces-test
+        allowTags: "^notification-service-.*"
+        imagePullSecrets: [{ name: dockerhub-creds }]
     - image:
-        repoURL: index.docker.io/tijnsemmekrot/traces-test
-        allowTags: "^payment-processor-.*$"
+        repoURL: tijnsemmekrot/traces-test
+        allowTags: "^payment-processor-.*"
+        imagePullSecrets: [{ name: dockerhub-creds }]
     - image:
-        repoURL: index.docker.io/tijnsemmekrot/traces-test
-        allowTags: "^payment-requester-.*$"
+        repoURL: tijnsemmekrot/traces-test
+        allowTags: "^payment-requester-.*"
+        imagePullSecrets: [{ name: dockerhub-creds }]

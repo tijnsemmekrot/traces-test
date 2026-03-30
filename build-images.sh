@@ -4,11 +4,16 @@ DOCKER_USER="tijnsemmekrot"
 REPO_NAME="traces-test"
 VERSION=$(date +%Y%m%d-%H%M)
 
+# Determine the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 SERVICES=("account-service" "fraud-detector" "notification-service" "payment-processor" "payment-requester")
 
 for service in "${SERVICES[@]}"; do
   TAG="$service-$VERSION"
   echo "--- Building $service with tag $TAG ---"
-  docker build -t "$DOCKER_USER/$REPO_NAME:$TAG" "./apps/$service"
+
+  # Use the absolute path relative to the script location
+  docker build -t "$DOCKER_USER/$REPO_NAME:$TAG" "$SCRIPT_DIR/apps/$service"
   docker push "$DOCKER_USER/$REPO_NAME:$TAG"
 done
