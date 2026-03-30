@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/tijnsemmekrot/traces-test.git
     targetRevision: HEAD
-    path: apps/payment-requester
+    path: environments/dev/payment-requester
   destination:
     server: https://kubernetes.default.svc
     namespace: default

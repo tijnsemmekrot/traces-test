@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/tijnsemmekrot/traces-test.git
     targetRevision: HEAD
-    path: apps/account-service
+    path: environments/dev/account-service
   destination:
     server: https://kubernetes.default.svc
     namespace: default

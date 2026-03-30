@@ -1,0 +1,43 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: traces-test
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: traces-test-warehouse
+      sources:
+        direct: true
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/tijnsemmekrot/traces-test.git
+            checkout: [{ branch: main }]
+        - uses: kustomize-set-image
+          config:
+            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            path: environments/dev/account-service
+        - uses: kustomize-set-image
+          config:
+            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            path: environments/dev/fraud-detector
+        - uses: kustomize-set-image
+          config:
+            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            path: environments/dev/notification-service
+        - uses: kustomize-set-image
+          config:
+            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            path: environments/dev/payment-processor
+        - uses: kustomize-set-image
+          config:
+            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            path: environments/dev/payment-requester
+        - uses: git-push
+          config:
+            repoURL: https://github.com/tijnsemmekrot/traces-test.git
+            targetBranch: main

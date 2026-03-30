@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: account-service
-          image: tijnsemmekrot/traces-test:account-service
+          image: index.docker.io/tijnsemmekrot/traces-test
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

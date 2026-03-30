@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: fraud-detector
-          image: tijnsemmekrot/traces-test:fraud-detector
+          image: index.docker.io/tijnsemmekrot/traces-test
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

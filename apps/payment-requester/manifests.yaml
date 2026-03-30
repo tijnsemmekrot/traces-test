@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: payment-requester
-          image: tijnsemmekrot/traces-test:payment-requester
+          image: index.docker.io/tijnsemmekrot/traces-test
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

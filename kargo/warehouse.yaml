@@ -1,0 +1,22 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: traces-test-warehouse
+  namespace: traces-test
+spec:
+  subscriptions:
+    - image:
+        repoURL: index.docker.io/tijnsemmekrot/traces-test
+        allowTags: "^account-service-.*$"
+    - image:
+        repoURL: index.docker.io/tijnsemmekrot/traces-test
+        allowTags: "^fraud-detector-.*$"
+    - image:
+        repoURL: index.docker.io/tijnsemmekrot/traces-test
+        allowTags: "^notification-service-.*$"
+    - image:
+        repoURL: index.docker.io/tijnsemmekrot/traces-test
+        allowTags: "^payment-processor-.*$"
+    - image:
+        repoURL: index.docker.io/tijnsemmekrot/traces-test
+        allowTags: "^payment-requester-.*$"
