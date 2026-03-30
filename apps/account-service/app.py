@@ -6,13 +6,15 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.propagate import extract
 from opentelemetry.sdk.resources import Resource
 import random
+from opentelemetry.sdk.trace.sampling import TraceIdRatioBased
 
 resource = Resource.create({"service.name": "account-service"})
 
 otlp_exporter = OTLPSpanExporter(
     endpoint="http://jaeger.jaeger.svc.cluster.local:4318/v1/traces"
 )
-provider = TracerProvider(resource=resource)
+sampler = TraceIdRatioBased(0.1)
+provider = TracerProvider(resource=resource, sampler=sampler)
 processor = SimpleSpanProcessor(otlp_exporter)
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
