@@ -9,19 +9,29 @@ spec:
         repoURL: tijnsemmekrot/traces-test
         allowTags: "^account-service-.*"
         imagePullSecrets: [{ name: dockerhub-creds }]
+        imageSelectionStrategy: Lexical
+        strictSemvers: false
     - image:
         repoURL: tijnsemmekrot/traces-test
         allowTags: "^fraud-detector-.*"
         imagePullSecrets: [{ name: dockerhub-creds }]
+        imageSelectionStrategy: Lexical
+        strictSemvers: false
     - image:
         repoURL: tijnsemmekrot/traces-test
         allowTags: "^notification-service-.*"
         imagePullSecrets: [{ name: dockerhub-creds }]
+        imageSelectionStrategy: Lexical
+        strictSemvers: false
     - image:
         repoURL: tijnsemmekrot/traces-test
         allowTags: "^payment-processor-.*"
         imagePullSecrets: [{ name: dockerhub-creds }]
+        imageSelectionStrategy: Lexical
+        strictSemvers: false
     - image:
         repoURL: tijnsemmekrot/traces-test
         allowTags: "^payment-requester-.*"
         imagePullSecrets: [{ name: dockerhub-creds }]
+        imageSelectionStrategy: Lexical
+        strictSemvers: false
