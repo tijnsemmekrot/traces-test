@@ -4,5 +4,5 @@ resources:
   - ../../../apps/notification-service
 
 images:
-  - name: index.docker.io/tijnsemmekrot/traces-test
-    newTag: latest
+  - name: notification-service-image
+    newTag: placeholder

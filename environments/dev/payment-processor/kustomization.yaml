@@ -4,5 +4,5 @@ resources:
   - ../../../apps/payment-processor
 
 images:
-  - name: index.docker.io/tijnsemmekrot/traces-test
-    newTag: latest
+  - name: payment-processor-image
+    newTag: placeholder

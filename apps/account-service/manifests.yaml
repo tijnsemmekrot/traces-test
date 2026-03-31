@@ -1,3 +1,4 @@
+# apps/account-service/manifests.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
         - name: account-service
-          image: index.docker.io/tijnsemmekrot/traces-test
+          image: index.docker.io/tijnsemmekrot/traces-test-account-service
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

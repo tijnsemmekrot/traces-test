@@ -17,26 +17,37 @@ spec:
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test.git
             checkout: [{ branch: main }]
+
+        # Promotion for Service 1
         - uses: kustomize-set-image
           config:
-            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            images: [{ image: account-service-image }]
             path: environments/dev/account-service
+
+        # Promotion for Service 2
         - uses: kustomize-set-image
           config:
-            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            images: [{ image: fraud-detector-image }]
             path: environments/dev/fraud-detector
+
+        # Promotion for Service 3
         - uses: kustomize-set-image
           config:
-            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            images: [{ image: notification-service-image }]
             path: environments/dev/notification-service
+
+        # Promotion for Service 4
         - uses: kustomize-set-image
           config:
-            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            images: [{ image: payment-processor-image }]
             path: environments/dev/payment-processor
+
+        # Promotion for Service 5
         - uses: kustomize-set-image
           config:
-            images: [{ image: index.docker.io/tijnsemmekrot/traces-test }]
+            images: [{ image: payment-requester-image }]
             path: environments/dev/payment-requester
+
         - uses: git-push
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test.git

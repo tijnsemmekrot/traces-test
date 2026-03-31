@@ -4,5 +4,5 @@ resources:
   - ../../../apps/fraud-detector
 
 images:
-  - name: index.docker.io/tijnsemmekrot/traces-test
-    newTag: latest
+  - name: fraud-detector-image
+    newTag: placeholder

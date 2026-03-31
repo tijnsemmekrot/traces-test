@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: payment-processor
-          image: index.docker.io/tijnsemmekrot/traces-test
+          image: index.docker.io/tijnsemmekrot/traces-test-payment-processor
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

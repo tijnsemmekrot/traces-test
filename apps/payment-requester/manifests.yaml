@@ -16,15 +16,10 @@ spec:
     spec:
       containers:
         - name: payment-requester
-          image: index.docker.io/tijnsemmekrot/traces-test
+          image: index.docker.io/tijnsemmekrot/traces-test-payment-requester
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-          env:
-            - name: PAYMENT_PROCESSOR_URL
-              value: "http://payment-processor:8080"
-            - name: OTEL_TRACES_SAMPLER_ARG
-              value: "0.1"
           livenessProbe:
             httpGet:
               path: /health
@@ -49,5 +44,4 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 30080
-  type: NodePort
+  type: ClusterIP

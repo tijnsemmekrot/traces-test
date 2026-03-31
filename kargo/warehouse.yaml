@@ -1,3 +1,4 @@
+# kargo/warehouse.yaml
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
@@ -6,32 +7,32 @@ metadata:
 spec:
   subscriptions:
     - image:
-        repoURL: tijnsemmekrot/traces-test
-        allowTags: "^account-service-.*"
+        name: account-service-image
+        repoURL: index.docker.io/tijnsemmekrot/traces-test-account-service
         imagePullSecrets: [{ name: dockerhub-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
-        repoURL: tijnsemmekrot/traces-test
-        allowTags: "^fraud-detector-.*"
+        name: fraud-detector-image
+        repoURL: index.docker.io/tijnsemmekrot/traces-test-fraud-detector
         imagePullSecrets: [{ name: dockerhub-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
-        repoURL: tijnsemmekrot/traces-test
-        allowTags: "^notification-service-.*"
+        name: notification-service-image
+        repoURL: index.docker.io/tijnsemmekrot/traces-test-notification-service
         imagePullSecrets: [{ name: dockerhub-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
-        repoURL: tijnsemmekrot/traces-test
-        allowTags: "^payment-processor-.*"
+        name: payment-processor-image
+        repoURL: index.docker.io/tijnsemmekrot/traces-test-payment-processor
         imagePullSecrets: [{ name: dockerhub-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
-        repoURL: tijnsemmekrot/traces-test
-        allowTags: "^payment-requester-.*"
+        name: payment-requester-image
+        repoURL: index.docker.io/tijnsemmekrot/traces-test-payment-requester
         imagePullSecrets: [{ name: dockerhub-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
