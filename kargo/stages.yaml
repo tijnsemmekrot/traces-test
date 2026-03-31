@@ -1,4 +1,3 @@
-# kargo/stages.yaml
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
@@ -28,50 +27,51 @@ spec:
               - branch: ${{ vars.branch }}
                 path: repo
 
-        # Service 1: account-service (Index 0 in Warehouse list)
+        # Service 1: account-service
         - uses: kustomize-set-image
           as: update-account-service
           config:
             path: repo/environments/dev/account-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
-                tag: ${{ freight.images[0].tag }}
+                # In v1.9.5, if image() is nil, try the direct map:
+                tag: ${{ images["000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service"].Tag }}
 
-        # Service 2: fraud-detector (Index 1)
+        # Service 2: fraud-detector
         - uses: kustomize-set-image
           as: update-fraud-detector
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
-                tag: ${{ freight.images[1].tag }}
+                tag: ${{ images["000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector"].Tag }}
 
-        # Service 3: notification-service (Index 2)
+        # Service 3: notification-service
         - uses: kustomize-set-image
           as: update-notification-service
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
-                tag: ${{ freight.images[2].tag }}
+                tag: ${{ images["000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service"].Tag }}
 
-        # Service 4: payment-processor (Index 3)
+        # Service 4: payment-processor
         - uses: kustomize-set-image
           as: update-payment-processor
           config:
             path: repo/environments/dev/payment-processor
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
-                tag: ${{ freight.images[3].tag }}
+                tag: ${{ images["000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor"].Tag }}
 
-        # Service 5: payment-requester (Index 4)
+        # Service 5: payment-requester
         - uses: kustomize-set-image
           as: update-payment-requester
           config:
             path: repo/environments/dev/payment-requester
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
-                tag: ${{ freight.images[4].tag }}
+                tag: ${{ images["000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester"].Tag }}
 
         - uses: git-commit
           as: commit
