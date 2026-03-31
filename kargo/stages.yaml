@@ -27,51 +27,33 @@ spec:
               - branch: ${{ vars.branch }}
                 path: repo
 
-        # Service 1: account-service
+        # Service 1: account-service (Index 0 in Freight)
         - uses: kustomize-set-image
           as: update-account-service
           config:
             path: repo/environments/dev/account-service
             images:
               - image: ${{ vars.registry }}/traces-test-account-service
-                # Use the image() function to fetch the tag for this specific URL
-                newTag: ${{ image(vars.registry + '/traces-test-account-service').tag }}
+                # Trying the ctx.warehouse naming convention for image access
+                newTag: ${{ ctx.warehouse('traces-test-warehouse').images[0].tag }}
 
-        # Service 2: fraud-detector
+        # Service 2: fraud-detector (Index 1 in Freight)
         - uses: kustomize-set-image
           as: update-fraud-detector
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: ${{ vars.registry }}/traces-test-fraud-detector
-                newTag: ${{ image(vars.registry + '/traces-test-fraud-detector').tag }}
+                newTag: ${{ ctx.warehouse('traces-test-warehouse').images[1].tag }}
 
-        # Service 3: notification-service
+        # Service 3: notification-service (Index 2 in Freight)
         - uses: kustomize-set-image
           as: update-notification-service
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: ${{ vars.registry }}/traces-test-notification-service
-                newTag: ${{ image(vars.registry + '/traces-test-notification-service').tag }}
-
-        # Service 4: payment-processor
-        - uses: kustomize-set-image
-          as: update-payment-processor
-          config:
-            path: repo/environments/dev/payment-processor
-            images:
-              - image: ${{ vars.registry }}/traces-test-payment-processor
-                newTag: ${{ image(vars.registry + '/traces-test-payment-processor').tag }}
-
-        # Service 5: payment-requester
-        - uses: kustomize-set-image
-          as: update-payment-requester
-          config:
-            path: repo/environments/dev/payment-requester
-            images:
-              - image: ${{ vars.registry }}/traces-test-payment-requester
-                newTag: ${{ image(vars.registry + '/traces-test-payment-requester').tag }}
+                newTag: ${{ ctx.warehouse('traces-test-warehouse').images[2].tag }}
 
         - uses: git-commit
           as: commit
