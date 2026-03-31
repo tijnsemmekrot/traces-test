@@ -10,7 +10,6 @@ spec:
         name: traces-test-warehouse
       sources:
         direct: true
-
   promotionTemplate:
     spec:
       steps:
@@ -19,47 +18,45 @@ spec:
             repoURL: https://github.com/tijnsemmekrot/traces-test.git
             checkout:
               - branch: kargo-implementation
+                path: ./
             credentials:
               name: git-credentials
-
         # Service 1
         - uses: kustomize-set-image
           config:
             images:
               - image: account-service-image
             path: environments/dev/account-service
-
         # Service 2
         - uses: kustomize-set-image
           config:
             images:
               - image: fraud-detector-image
             path: environments/dev/fraud-detector
-
         # Service 3
         - uses: kustomize-set-image
           config:
             images:
               - image: notification-service-image
             path: environments/dev/notification-service
-
         # Service 4
         - uses: kustomize-set-image
           config:
             images:
               - image: payment-processor-image
             path: environments/dev/payment-processor
-
         # Service 5
         - uses: kustomize-set-image
           config:
             images:
               - image: payment-requester-image
             path: environments/dev/payment-requester
-
+        - uses: git-commit
+          config:
+            path: ./
+            messageFromSteps:
+              - kustomize-set-image
         - uses: git-push
           config:
-            repoURL: https://github.com/tijnsemmekrot/traces-test.git
+            path: ./
             targetBranch: kargo-implementation
-            credentials:
-              name: git-credentials

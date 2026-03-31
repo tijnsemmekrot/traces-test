@@ -8,31 +8,31 @@ spec:
   subscriptions:
     - image:
         name: account-service-image
-        repoURL: index.docker.io/tijnsemmekrot/traces-test-account-service
-        imagePullSecrets: [{ name: dockerhub-creds }]
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
         name: fraud-detector-image
-        repoURL: index.docker.io/tijnsemmekrot/traces-test-fraud-detector
-        imagePullSecrets: [{ name: dockerhub-creds }]
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
         name: notification-service-image
-        repoURL: index.docker.io/tijnsemmekrot/traces-test-notification-service
-        imagePullSecrets: [{ name: dockerhub-creds }]
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
         name: payment-processor-image
-        repoURL: index.docker.io/tijnsemmekrot/traces-test-payment-processor
-        imagePullSecrets: [{ name: dockerhub-creds }]
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
     - image:
         name: payment-requester-image
-        repoURL: index.docker.io/tijnsemmekrot/traces-test-payment-requester
-        imagePullSecrets: [{ name: dockerhub-creds }]
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
         strictSemvers: false
