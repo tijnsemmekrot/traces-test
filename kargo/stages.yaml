@@ -27,54 +27,58 @@ spec:
               - branch: ${{ vars.branch }}
                 path: repo
 
+        # Service 1: account-service
         - uses: kustomize-set-image
           as: update-account-service
           config:
             path: repo/environments/dev/account-service
             images:
               - image: ${{ vars.registry }}/traces-test-account-service
-                # This satisfies the 'tag is required' error by
-                # looking up the tag in the current Freight
-                fromFreight: true
+                # Use the image() function to fetch the tag for this specific URL
+                newTag: ${{ image(vars.registry + '/traces-test-account-service').tag }}
 
+        # Service 2: fraud-detector
         - uses: kustomize-set-image
           as: update-fraud-detector
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: ${{ vars.registry }}/traces-test-fraud-detector
-                fromFreight: true
+                newTag: ${{ image(vars.registry + '/traces-test-fraud-detector').tag }}
 
+        # Service 3: notification-service
         - uses: kustomize-set-image
           as: update-notification-service
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: ${{ vars.registry }}/traces-test-notification-service
-                fromFreight: true
+                newTag: ${{ image(vars.registry + '/traces-test-notification-service').tag }}
 
+        # Service 4: payment-processor
         - uses: kustomize-set-image
           as: update-payment-processor
           config:
             path: repo/environments/dev/payment-processor
             images:
               - image: ${{ vars.registry }}/traces-test-payment-processor
-                fromFreight: true
+                newTag: ${{ image(vars.registry + '/traces-test-payment-processor').tag }}
 
+        # Service 5: payment-requester
         - uses: kustomize-set-image
           as: update-payment-requester
           config:
             path: repo/environments/dev/payment-requester
             images:
               - image: ${{ vars.registry }}/traces-test-payment-requester
-                fromFreight: true
+                newTag: ${{ image(vars.registry + '/traces-test-payment-requester').tag }}
 
         - uses: git-commit
           as: commit
           config:
             path: repo
             message: |
-              Promote images to dev
+              Promote to dev
               ${{ outputs['update-account-service'].commitMessage }}
 
         - uses: git-push
