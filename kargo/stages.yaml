@@ -18,7 +18,6 @@ spec:
             repoURL: https://github.com/tijnsemmekrot/traces-test.git
             checkout:
               - branch: kargo-implementation
-                path: ./
         # Service 1
         - uses: kustomize-set-image
           config:
@@ -51,10 +50,8 @@ spec:
             path: environments/dev/payment-requester
         - uses: git-commit
           config:
-            path: ./
             messageFromSteps:
               - kustomize-set-image
         - uses: git-push
           config:
-            path: ./
             targetBranch: kargo-implementation
