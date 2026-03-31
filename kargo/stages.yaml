@@ -33,9 +33,8 @@ spec:
           config:
             path: repo/environments/dev/account-service
             images:
-              - image: ${{ vars.registry }}/traces-test-account-service
-                # Fix: Using string concatenation with '+' which is more reliable in Kargo expressions
-                tag: ${{ image(vars.registry + "/traces-test-account-service").Tag }}
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
+                tag: ${{ image("000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service").Tag }}
 
         # Service 2: fraud-detector
         - uses: kustomize-set-image
@@ -43,8 +42,8 @@ spec:
           config:
             path: repo/environments/dev/fraud-detector
             images:
-              - image: ${{ vars.registry }}/traces-test-fraud-detector
-                tag: ${{ image(vars.registry + "/traces-test-fraud-detector").Tag }}
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+                tag: ${{ image("000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector").Tag }}
 
         # Service 3: notification-service
         - uses: kustomize-set-image
@@ -52,8 +51,8 @@ spec:
           config:
             path: repo/environments/dev/notification-service
             images:
-              - image: ${{ vars.registry }}/traces-test-notification-service
-                tag: ${{ image(vars.registry + "/traces-test-notification-service").Tag }}
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
+                tag: ${{ image("000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service").Tag }}
 
         # Service 4: payment-requester
         - uses: kustomize-set-image
@@ -61,8 +60,8 @@ spec:
           config:
             path: repo/environments/dev/payment-requester
             images:
-              - image: ${{ vars.registry }}/traces-test-payment-requester
-                tag: ${{ image(vars.registry + "/traces-test-payment-requester").Tag }}
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+                tag: ${{ image("000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester").Tag }}
 
         # Service 5: payment-processor
         - uses: kustomize-set-image
@@ -70,16 +69,14 @@ spec:
           config:
             path: repo/environments/dev/payment-processor
             images:
-              - image: ${{ vars.registry }}/traces-test-payment-processor
-                tag: ${{ image(vars.registry + "/traces-test-payment-processor").Tag }}
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+                tag: ${{ image("000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor").Tag }}
 
         - uses: git-commit
           as: commit
           config:
             path: repo
-            message: |
-              Promote Freight to dev
-              Updated all 5 microservices.
+            message: "Promote Freight to dev: updated image tags"
 
         - uses: git-push
           config:
