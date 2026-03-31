@@ -27,40 +27,40 @@ spec:
               - branch: ${{ vars.branch }}
                 path: repo
 
-        # Service 1: account-service (Index 0 in Freight)
+        # Service 1: account-service (Index 0)
         - uses: kustomize-set-image
           as: update-account-service
           config:
             path: repo/environments/dev/account-service
             images:
               - image: ${{ vars.registry }}/traces-test-account-service
-                # Trying the ctx.warehouse naming convention for image access
-                newTag: ${{ ctx.warehouse('traces-test-warehouse').images[0].tag }}
+                # Accessing the first image in the Freight via the ctx object
+                newTag: ${{ ctx.images[0].tag }}
 
-        # Service 2: fraud-detector (Index 1 in Freight)
+        # Service 2: fraud-detector (Index 1)
         - uses: kustomize-set-image
           as: update-fraud-detector
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: ${{ vars.registry }}/traces-test-fraud-detector
-                newTag: ${{ ctx.warehouse('traces-test-warehouse').images[1].tag }}
+                newTag: ${{ ctx.images[1].tag }}
 
-        # Service 3: notification-service (Index 2 in Freight)
+        # Service 3: notification-service (Index 2)
         - uses: kustomize-set-image
           as: update-notification-service
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: ${{ vars.registry }}/traces-test-notification-service
-                newTag: ${{ ctx.warehouse('traces-test-warehouse').images[2].tag }}
+                newTag: ${{ ctx.images[2].tag }}
 
         - uses: git-commit
           as: commit
           config:
             path: repo
             message: |
-              Promote to dev
+              Promote images to dev
               ${{ outputs['update-account-service'].commitMessage }}
 
         - uses: git-push
