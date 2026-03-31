@@ -10,45 +10,56 @@ spec:
         name: traces-test-warehouse
       sources:
         direct: true
+
   promotionTemplate:
     spec:
       steps:
         - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test.git
-            checkout: [{ branch: main }]
+            checkout:
+              - branch: kargo-implementation
+            credentials:
+              name: git-credentials
 
-        # Promotion for Service 1
+        # Service 1
         - uses: kustomize-set-image
           config:
-            images: [{ image: account-service-image }]
+            images:
+              - image: account-service-image
             path: environments/dev/account-service
 
-        # Promotion for Service 2
+        # Service 2
         - uses: kustomize-set-image
           config:
-            images: [{ image: fraud-detector-image }]
+            images:
+              - image: fraud-detector-image
             path: environments/dev/fraud-detector
 
-        # Promotion for Service 3
+        # Service 3
         - uses: kustomize-set-image
           config:
-            images: [{ image: notification-service-image }]
+            images:
+              - image: notification-service-image
             path: environments/dev/notification-service
 
-        # Promotion for Service 4
+        # Service 4
         - uses: kustomize-set-image
           config:
-            images: [{ image: payment-processor-image }]
+            images:
+              - image: payment-processor-image
             path: environments/dev/payment-processor
 
-        # Promotion for Service 5
+        # Service 5
         - uses: kustomize-set-image
           config:
-            images: [{ image: payment-requester-image }]
+            images:
+              - image: payment-requester-image
             path: environments/dev/payment-requester
 
         - uses: git-push
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test.git
-            targetBranch: main
+            targetBranch: kargo-implementation
+            credentials:
+              name: git-credentials
