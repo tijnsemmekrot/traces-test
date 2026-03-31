@@ -4,4 +4,5 @@ resources:
   - ../../../apps/fraud-detector
 
 images:
-  - name: fraud-detector-image
+  - name: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+    newTag: placeholder

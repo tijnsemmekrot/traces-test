@@ -4,4 +4,5 @@ resources:
   - ../../../apps/payment-processor
 
 images:
-  - name: payment-processor-image
+  - name: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+    newTag: placeholder

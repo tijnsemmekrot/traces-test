@@ -1,4 +1,3 @@
-# kargo/warehouse.yaml
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
@@ -7,32 +6,22 @@ metadata:
 spec:
   subscriptions:
     - image:
-        name: account-service-image
         repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
         imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
-        strictSemvers: false
     - image:
-        name: fraud-detector-image
         repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
         imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
-        strictSemvers: false
     - image:
-        name: notification-service-image
         repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
         imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
-        strictSemvers: false
     - image:
-        name: payment-processor-image
         repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
         imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
-        strictSemvers: false
     - image:
-        name: payment-requester-image
         repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
         imagePullSecrets: [{ name: localstack-ecr-creds }]
         imageSelectionStrategy: Lexical
-        strictSemvers: false

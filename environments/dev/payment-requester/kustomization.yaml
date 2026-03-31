@@ -4,4 +4,5 @@ resources:
   - ../../../apps/payment-requester
 
 images:
-  - name: payment-requester-image
+  - name: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+    newTag: placeholder

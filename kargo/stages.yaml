@@ -27,51 +27,58 @@ spec:
               - branch: ${{ vars.branch }}
                 path: repo
 
-        # Service 1: account-service (Index 0)
+        # Service 1: account-service
         - uses: kustomize-set-image
           as: update-account-service
           config:
             path: repo/environments/dev/account-service
             images:
               - image: ${{ vars.registry }}/traces-test-account-service
+                tag: ${{ image(concat(vars.registry, "/traces-test-account-service")).Tag }}
 
-        # Service 2: fraud-detector (Index 1)
+        # Service 2: fraud-detector
         - uses: kustomize-set-image
           as: update-fraud-detector
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: ${{ vars.registry }}/traces-test-fraud-detector
+                tag: ${{ image(concat(vars.registry, "/traces-test-fraud-detector")).Tag }}
 
-        # Service 3: notification-service (Index 2)
+        # Service 3: notification-service
         - uses: kustomize-set-image
           as: update-notification-service
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: ${{ vars.registry }}/traces-test-notification-service
+                tag: ${{ image(concat(vars.registry, "/traces-test-notification-service")).Tag }}
 
+        # Service 4: payment-requester
         - uses: kustomize-set-image
           as: update-payment-requester
           config:
             path: repo/environments/dev/payment-requester
             images:
               - image: ${{ vars.registry }}/traces-test-payment-requester
+                tag: ${{ image(concat(vars.registry, "/traces-test-payment-requester")).Tag }}
 
+        # Service 5: payment-processor
         - uses: kustomize-set-image
           as: update-payment-processor
           config:
             path: repo/environments/dev/payment-processor
             images:
               - image: ${{ vars.registry }}/traces-test-payment-processor
+                tag: ${{ image(concat(vars.registry, "/traces-test-payment-processor")).Tag }}
 
         - uses: git-commit
           as: commit
           config:
             path: repo
             message: |
-              Promote images to dev
-              ${{ outputs['update-account-service'].commitMessage }}
+              Promote Freight to dev
+              Updated all 5 microservices to latest discovered tags.
 
         - uses: git-push
           config:
