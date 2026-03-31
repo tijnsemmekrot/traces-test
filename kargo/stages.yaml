@@ -20,50 +20,50 @@ spec:
               - branch: kargo-implementation
                 path: repo
 
-        # Service 1
+        # Service 1: account-service
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/account-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
-                # Access via the Warehouse key
-                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['account-service-image'].tag }}
+                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service'].tag }}
 
-        # Service 2
+        # Service 2: fraud-detector
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
-                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['fraud-detector-image'].tag }}
+                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector'].tag }}
 
-        # Service 3
+        # Service 3: notification-service
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
-                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['notification-service-image'].tag }}
+                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service'].tag }}
 
-        # Service 4
+        # Service 4: payment-processor
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-processor
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
-                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['payment-processor-image'].tag }}
+                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor'].tag }}
 
-        # Service 5
+        # Service 5: payment-requester
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-requester
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
-                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['payment-requester-image'].tag }}
+                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester'].tag }}
 
         - uses: git-commit
           config:
             path: repo
+            # Referencing steps by their default index aliases (step-2 through step-6)
             messageFromSteps:
               - step-2
               - step-3
