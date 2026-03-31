@@ -5,4 +5,3 @@ resources:
 
 images:
   - name: fraud-detector-image
-    newTag: placeholder

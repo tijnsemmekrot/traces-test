@@ -5,4 +5,3 @@ resources:
 
 images:
   - name: payment-requester-image
-    newTag: placeholder

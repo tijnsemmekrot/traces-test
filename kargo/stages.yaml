@@ -51,6 +51,20 @@ spec:
             images:
               - image: ${{ vars.registry }}/traces-test-notification-service
 
+        - uses: kustomize-set-image
+          as: update-payment-requester
+          config:
+            path: repo/environments/dev/payment-requester
+            images:
+              - image: ${{ vars.registry }}/traces-test-payment-requester
+
+        - uses: kustomize-set-image
+          as: update-payment-processor
+          config:
+            path: repo/environments/dev/payment-processor
+            images:
+              - image: ${{ vars.registry }}/traces-test-payment-processor
+
         - uses: git-commit
           as: commit
           config:

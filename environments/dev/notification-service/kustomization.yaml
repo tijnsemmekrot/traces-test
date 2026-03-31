@@ -5,4 +5,3 @@ resources:
 
 images:
   - name: notification-service-image
-    newTag: placeholder
