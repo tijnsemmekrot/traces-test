@@ -19,41 +19,62 @@ spec:
             checkout:
               - branch: kargo-implementation
                 path: repo
+
         # Service 1
         - uses: kustomize-set-image
+          id: update-account-service
           config:
             path: repo/environments/dev/account-service
-            imageMaps:
+            images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
+                newTag: ${{ images['account-service-image'].tag }}
+
         # Service 2
         - uses: kustomize-set-image
+          id: update-fraud-detector
           config:
             path: repo/environments/dev/fraud-detector
-            imageMaps:
+            images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+                newTag: ${{ images['fraud-detector-image'].tag }}
+
         # Service 3
         - uses: kustomize-set-image
+          id: update-notification-service
           config:
             path: repo/environments/dev/notification-service
-            imageMaps:
+            images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
+                newTag: ${{ images['notification-service-image'].tag }}
+
         # Service 4
         - uses: kustomize-set-image
+          id: update-payment-processor
           config:
             path: repo/environments/dev/payment-processor
-            imageMaps:
+            images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+                newTag: ${{ images['payment-processor-image'].tag }}
+
         # Service 5
         - uses: kustomize-set-image
+          id: update-payment-requester
           config:
             path: repo/environments/dev/payment-requester
-            imageMaps:
+            images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+                newTag: ${{ images['payment-requester-image'].tag }}
+
         - uses: git-commit
           config:
             path: repo
             messageFromSteps:
-              - kustomize-set-image
+              - update-account-service
+              - update-fraud-detector
+              - update-notification-service
+              - update-payment-processor
+              - update-payment-requester
+
         - uses: git-push
           config:
             path: repo
