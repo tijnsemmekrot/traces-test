@@ -19,8 +19,6 @@ spec:
             checkout:
               - branch: kargo-implementation
                 path: ./
-            credentials:
-              name: git-credentials
         # Service 1
         - uses: kustomize-set-image
           config:
