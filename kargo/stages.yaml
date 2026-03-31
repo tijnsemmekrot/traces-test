@@ -24,36 +24,31 @@ spec:
           config:
             path: repo/environments/dev/account-service
             images:
-              - fromFreight: true
-                image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
         # Service 2
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/fraud-detector
             images:
-              - fromFreight: true
-                image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
         # Service 3
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/notification-service
             images:
-              - fromFreight: true
-                image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
         # Service 4
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-processor
             images:
-              - fromFreight: true
-                image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
         # Service 5
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-requester
             images:
-              - fromFreight: true
-                image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
         - uses: git-commit
           config:
             path: repo
