@@ -20,50 +20,51 @@ spec:
               - branch: kargo-implementation
                 path: repo
 
-        # Service 1: account-service
+        # Service 1
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/account-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
-                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service'].tag }}
+                # In some versions, leaving newTag out or using this placeholder
+                # allows the controller to auto-inject from the Freight
+                useLatestTag: true
 
-        # Service 2: fraud-detector
+        # Service 2
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
-                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector'].tag }}
+                useLatestTag: true
 
-        # Service 3: notification-service
+        # Service 3
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
-                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service'].tag }}
+                useLatestTag: true
 
-        # Service 4: payment-processor
+        # Service 4
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-processor
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
-                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor'].tag }}
+                useLatestTag: true
 
-        # Service 5: payment-requester
+        # Service 5
         - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-requester
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
-                newTag: ${{ images['000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester'].tag }}
+                useLatestTag: true
 
         - uses: git-commit
           config:
             path: repo
-            # Referencing steps by their default index aliases (step-2 through step-6)
             messageFromSteps:
               - step-2
               - step-3
