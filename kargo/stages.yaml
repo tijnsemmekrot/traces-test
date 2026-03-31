@@ -22,39 +22,54 @@ spec:
         # Service 1
         - uses: kustomize-set-image
           config:
+            path: repo/environments/dev/account-service
             images:
-              - image: account-service-image
-            path: environments/dev/account-service
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
+                fromOrigin:
+                  kind: Warehouse
+                  name: traces-test-warehouse
         # Service 2
         - uses: kustomize-set-image
           config:
+            path: repo/environments/dev/fraud-detector
             images:
-              - image: fraud-detector-image
-            path: environments/dev/fraud-detector
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+                fromOrigin:
+                  kind: Warehouse
+                  name: traces-test-warehouse
         # Service 3
         - uses: kustomize-set-image
           config:
+            path: repo/environments/dev/notification-service
             images:
-              - image: notification-service-image
-            path: environments/dev/notification-service
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
+                fromOrigin:
+                  kind: Warehouse
+                  name: traces-test-warehouse
         # Service 4
         - uses: kustomize-set-image
           config:
+            path: repo/environments/dev/payment-processor
             images:
-              - image: payment-processor-image
-            path: environments/dev/payment-processor
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+                fromOrigin:
+                  kind: Warehouse
+                  name: traces-test-warehouse
         # Service 5
         - uses: kustomize-set-image
           config:
+            path: repo/environments/dev/payment-requester
             images:
-              - image: payment-requester-image
-            path: environments/dev/payment-requester
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+                fromOrigin:
+                  kind: Warehouse
+                  name: traces-test-warehouse
         - uses: git-commit
           config:
-            path: ./
+            path: repo
             messageFromSteps:
               - kustomize-set-image
         - uses: git-push
           config:
-            path: ./
+            path: repo
             targetBranch: kargo-implementation
