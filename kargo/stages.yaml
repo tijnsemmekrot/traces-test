@@ -26,8 +26,8 @@ spec:
             path: repo/environments/dev/account-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
-                # Try the direct property access if the map lookup failed
-                newTag: ${{ images.account-service-image.tag }}
+                # Access via the Warehouse key
+                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['account-service-image'].tag }}
 
         # Service 2
         - uses: kustomize-set-image
@@ -35,7 +35,7 @@ spec:
             path: repo/environments/dev/fraud-detector
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
-                newTag: ${{ images.fraud-detector-image.tag }}
+                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['fraud-detector-image'].tag }}
 
         # Service 3
         - uses: kustomize-set-image
@@ -43,7 +43,7 @@ spec:
             path: repo/environments/dev/notification-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
-                newTag: ${{ images.notification-service-image.tag }}
+                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['notification-service-image'].tag }}
 
         # Service 4
         - uses: kustomize-set-image
@@ -51,7 +51,7 @@ spec:
             path: repo/environments/dev/payment-processor
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
-                newTag: ${{ images.payment-processor-image.tag }}
+                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['payment-processor-image'].tag }}
 
         # Service 5
         - uses: kustomize-set-image
@@ -59,7 +59,7 @@ spec:
             path: repo/environments/dev/payment-requester
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
-                newTag: ${{ images.payment-requester-image.tag }}
+                newTag: ${{ vars.warehouses['traces-test-warehouse'].images['payment-requester-image'].tag }}
 
         - uses: git-commit
           config:
