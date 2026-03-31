@@ -13,52 +13,57 @@ spec:
   promotionTemplate:
     spec:
       steps:
-        - uses: git-clone # step-1
+        - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test.git
             checkout:
               - branch: kargo-implementation
                 path: repo
 
-        - uses: kustomize-set-image # step-2
+        # Service 1
+        - uses: kustomize-set-image
           config:
             path: repo/environments/dev/account-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
-                newTag: ${{ images['account-service-image'].tag }}
+                # Try the direct property access if the map lookup failed
+                newTag: ${{ images.account-service-image.tag }}
 
-        - uses: kustomize-set-image # step-3
+        # Service 2
+        - uses: kustomize-set-image
           config:
             path: repo/environments/dev/fraud-detector
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
-                newTag: ${{ images['fraud-detector-image'].tag }}
+                newTag: ${{ images.fraud-detector-image.tag }}
 
-        - uses: kustomize-set-image # step-4
+        # Service 3
+        - uses: kustomize-set-image
           config:
             path: repo/environments/dev/notification-service
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
-                newTag: ${{ images['notification-service-image'].tag }}
+                newTag: ${{ images.notification-service-image.tag }}
 
-        - uses: kustomize-set-image # step-5
+        # Service 4
+        - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-processor
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
-                newTag: ${{ images['payment-processor-image'].tag }}
+                newTag: ${{ images.payment-processor-image.tag }}
 
-        - uses: kustomize-set-image # step-6
+        # Service 5
+        - uses: kustomize-set-image
           config:
             path: repo/environments/dev/payment-requester
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
-                newTag: ${{ images['payment-requester-image'].tag }}
+                newTag: ${{ images.payment-requester-image.tag }}
 
-        - uses: git-commit # step-7
+        - uses: git-commit
           config:
             path: repo
-            # In older versions, we reference steps by their generated aliases
             messageFromSteps:
               - step-2
               - step-3
@@ -66,7 +71,7 @@ spec:
               - step-5
               - step-6
 
-        - uses: git-push # step-8
+        - uses: git-push
           config:
             path: repo
             targetBranch: kargo-implementation
