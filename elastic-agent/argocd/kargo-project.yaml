@@ -43,10 +43,8 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/tijnsemmekrot/traces-test
+            repoURL: https://github.com/tijnsemmekrot/traces-test.git
             checkout: [{ branch: kargo-implementation, path: ./src }]
-            # Add this line to ensure credentials are available for push
-            insecureSkipTLSVerify: false
         - uses: kustomize-set-image
           as: update-image
           config:
