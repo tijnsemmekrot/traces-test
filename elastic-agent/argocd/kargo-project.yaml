@@ -11,10 +11,9 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
   name: elastic-agent-kargo
-# NO SPEC ALLOWED HERE AT ALL
 
 ---
-# Warehouse - watches LocalStack ECR
+# Warehouse - watches LocalStack ECR in eu-west-1
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
@@ -30,7 +29,7 @@ spec:
         imageSelectionStrategy: NewestBuild
 
 ---
-# Dev Stage
+# Dev Stage - auto-promotes from warehouse
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
@@ -49,17 +48,18 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/tijnsemmekrot/localstack-test.git
+            repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout:
               - fromFreight: true
-                path: ./src
+                path: ./src # This is the workbench folder
         - uses: git-clear
           config:
             path: ./src
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: ./src/apps/elastic-agent/environments/dev
+            # Matches your tree: [workbench]/[repo-folder]/environments/dev
+            path: ./src/elastic-agent/environments/dev
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent
         - uses: git-commit
@@ -78,7 +78,7 @@ spec:
                 namespace: argocd
 
 ---
-# Staging Stage
+# Staging Stage - manual promotion from dev
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
@@ -92,12 +92,13 @@ spec:
       sources:
         stages:
           - dev
+
   promotionTemplate:
     spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/tijnsemmekrot/localstack-test.git
+            repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout:
               - fromFreight: true
                 path: ./src
@@ -107,7 +108,7 @@ spec:
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: ./src/apps/elastic-agent/environments/staging
+            path: ./src/elastic-agent/environments/staging
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent
         - uses: git-commit
@@ -126,7 +127,7 @@ spec:
                 namespace: argocd
 
 ---
-# Prod Stage
+# Prod Stage - manual promotion from staging
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
@@ -140,12 +141,13 @@ spec:
       sources:
         stages:
           - staging
+
   promotionTemplate:
     spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/tijnsemmekrot/localstack-test.git
+            repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout:
               - fromFreight: true
                 path: ./src
@@ -155,7 +157,7 @@ spec:
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: ./src/apps/elastic-agent/environments/prod
+            path: ./src/elastic-agent/environments/prod
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent
         - uses: git-commit
