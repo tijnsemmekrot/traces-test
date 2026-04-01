@@ -2,7 +2,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_URL="https://github.com/tijnsemmekrot/localstack-test.git" # Update with your repo
+REPO_URL="https://github.com/tijnsemmekrot/traces-test.git"
 
 echo "========================================"
 echo "Installing Elastic Agent with Kargo"
@@ -12,34 +12,37 @@ echo "========================================"
 echo "📦 Creating namespaces..."
 kubectl apply -f "$SCRIPT_DIR/namespaces.yaml"
 
-# 2. Create ECR credentials secret for each environment
+# 2. Create ECR credentials secret for each environment (for Kube pull secrets)
 echo "🔑 Creating ECR credentials for image pull..."
 for ENV in dev staging prod; do
   kubectl create secret docker-registry ecr-credentials \
-    --docker-server=000000000000.dkr.ecr.us-east-1.amazonaws.com \
+    --docker-server=000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566 \
     --docker-username=AWS \
     --docker-password=000000000000-auth-token \
     --namespace=elastic-agent-${ENV} \
     --dry-run=client -o yaml | kubectl apply -f -
 done
 
-# 3. Setup Kargo project and git credentials
+# 3. Setup Kargo project and credentials
 echo "🚀 Setting up Kargo project..."
 kubectl apply -f "$SCRIPT_DIR/argocd/kargo-project.yaml"
 
-# Create git credentials for Kargo
+# Create Git credentials for Kargo (CRITICAL: cred-type label)
+echo "🔑 Creating Git credentials for Kargo push..."
 kubectl create secret generic git-credentials \
   --namespace elastic-agent-kargo \
   --from-literal=username=tijnsemmekrot \
   --from-literal=password=${GITHUB_TOKEN} \
+  --type=kubernetes.io/basic-auth \
   --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl label secret git-credentials \
   --namespace elastic-agent-kargo \
-  kargo.akuity.io/secret-type=git \
+  kargo.akuity.io/cred-type=git \
   --overwrite
 
-# Create ECR credentials for Kargo
+# Create ECR credentials for Kargo Warehouse (CRITICAL: cred-type label)
+echo "🔑 Creating ECR credentials for Kargo Warehouse..."
 kubectl create secret generic ecr-credentials \
   --namespace elastic-agent-kargo \
   --from-literal=username=AWS \
@@ -48,7 +51,7 @@ kubectl create secret generic ecr-credentials \
 
 kubectl label secret ecr-credentials \
   --namespace elastic-agent-kargo \
-  kargo.akuity.io/secret-type=registry \
+  kargo.akuity.io/cred-type=image \
   --overwrite
 
 # Grant Kargo access to secrets
@@ -68,26 +71,3 @@ echo ""
 echo "========================================"
 echo "✅ Installation Complete!"
 echo "========================================"
-echo ""
-echo "📊 Next Steps:"
-echo ""
-echo "1. Sync elastic-agent image to ECR:"
-echo "   ./scripts/sync-elastic-image.sh 8.12.0"
-echo ""
-echo "2. Check ArgoCD applications:"
-echo "   kubectl get applications -n argocd | grep elastic-agent"
-echo ""
-echo "3. Monitor Kargo stages:"
-echo "   kubectl get stages -n elastic-agent-kargo"
-echo ""
-echo "4. Access Kargo UI:"
-echo "   kubectl port-forward -n kargo svc/kargo-api 8081:443"
-echo "   Open: https://localhost:8081"
-echo ""
-echo "5. Promote to staging/prod:"
-echo "   Use Kargo UI to manually promote from dev → staging → prod"
-echo ""
-echo "📍 Check deployment status:"
-echo "   kubectl get daemonsets -n elastic-agent-dev"
-echo "   kubectl get daemonsets -n elastic-agent-staging"
-echo "   kubectl get daemonsets -n elastic-agent-prod"
