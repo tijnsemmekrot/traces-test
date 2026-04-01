@@ -56,7 +56,7 @@ spec:
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: elastic-agent/environments/dev
+            path: /src/elastic-agent/environments/dev
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent
                 tag: ${{ imageFrom("000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent").Tag }}
