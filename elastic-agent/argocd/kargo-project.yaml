@@ -13,7 +13,6 @@ metadata:
   name: elastic-agent-kargo
 
 ---
-# Warehouse - watches LocalStack ECR in eu-west-1
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
@@ -37,46 +36,34 @@ metadata:
   namespace: elastic-agent-kargo
 spec:
   requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: elastic-agent
-      sources:
-        direct: true
-
+    - origin: { kind: Warehouse, name: elastic-agent }
+      sources: { direct: true }
   promotionTemplate:
     spec:
       steps:
         - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
-            checkout:
-              - branch: kargo-implementation
-                path: ./src
-
+            checkout: [{ branch: kargo-implementation, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
           config:
-            path: /src/elastic-agent/environments/dev
+            path: ./src/elastic-agent/environments/dev
             images:
               - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent
                 tag: ${{ imageFrom("000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent").Tag }}
-
         - uses: git-commit
           as: commit
           config:
             path: ./src
-            message: "feat: update elastic-agent image to ${{ imageFrom('000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent').Tag }}"
-
+            message: "feat(dev): update image to ${{ imageFrom('000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent').Tag }}"
         - uses: git-push
           config:
             path: ./src
             targetBranch: kargo-implementation
-
         - uses: argocd-update
           config:
-            apps:
-              - name: elastic-agent-dev
-                namespace: argocd
+            apps: [{ name: elastic-agent-dev, namespace: argocd }]
 
 ---
 # Staging Stage
@@ -87,25 +74,15 @@ metadata:
   namespace: elastic-agent-kargo
 spec:
   requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: elastic-agent
-      sources:
-        stages:
-          - dev
-
+    - origin: { kind: Warehouse, name: elastic-agent }
+      sources: { stages: [dev] }
   promotionTemplate:
     spec:
       steps:
         - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
-            checkout:
-              - branch: kargo-implementation
-                path: ./src
-        - uses: git-clear
-          config:
-            path: ./src
+            checkout: [{ branch: kargo-implementation, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -117,18 +94,14 @@ spec:
           as: commit
           config:
             path: ./src
-            messageFromSteps:
-              - update-image
+            message: "feat(staging): update image to ${{ imageFrom('000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent').Tag }}"
         - uses: git-push
           config:
             path: ./src
-            remote: origin
             targetBranch: kargo-implementation
         - uses: argocd-update
           config:
-            apps:
-              - name: elastic-agent-staging
-                namespace: argocd
+            apps: [{ name: elastic-agent-staging, namespace: argocd }]
 
 ---
 # Prod Stage
@@ -139,25 +112,15 @@ metadata:
   namespace: elastic-agent-kargo
 spec:
   requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: elastic-agent
-      sources:
-        stages:
-          - staging
-
+    - origin: { kind: Warehouse, name: elastic-agent }
+      sources: { stages: [staging] }
   promotionTemplate:
     spec:
       steps:
         - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
-            checkout:
-              - branch: kargo-implementation
-                path: ./src
-        - uses: git-clear
-          config:
-            path: ./src
+            checkout: [{ branch: kargo-implementation, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -169,13 +132,11 @@ spec:
           as: commit
           config:
             path: ./src
-            messageFromSteps:
-              - update-image
+            message: "feat(prod): update image to ${{ imageFrom('000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent').Tag }}"
         - uses: git-push
           config:
             path: ./src
+            targetBranch: kargo-implementation
         - uses: argocd-update
           config:
-            apps:
-              - name: elastic-agent-prod
-                namespace: argocd
+            apps: [{ name: elastic-agent-prod, namespace: argocd }]
