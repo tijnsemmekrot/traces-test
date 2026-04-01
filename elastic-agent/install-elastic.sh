@@ -3,7 +3,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # IMPORTANT: This MUST match the repoURL in your kargo-project.yaml exactly
-REPO_URL="https://github.com/tijnsemmekrot/traces-test.git"
+REPO_URL="https://github.com/tijnsemmekrot/traces-test"
 
 echo "========================================"
 echo "Installing Elastic Agent with Kargo"
@@ -38,7 +38,7 @@ kubectl create secret generic git-credentials \
   --from-literal=password=${GITHUB_TOKEN} \
   --type=kubernetes.io/basic-auth
 
-# This annotation allows Kargo to find credentials during git-push
+# CRITICAL: URL must match exactly what's in kargo-project.yaml (no .git suffix)
 kubectl annotate secret git-credentials \
   --namespace elastic-agent-kargo \
   kargo.akuity.io/repo-url="${REPO_URL}" \
@@ -81,7 +81,13 @@ echo "========================================"
 echo "✅ Installation Complete!"
 echo "========================================"
 echo ""
-echo "Next steps:"
-echo "1. Verify git credentials: kubectl get secret git-credentials -n elastic-agent-kargo -o jsonpath='{.metadata.annotations.kargo\.akuity\.io/repo-url}'"
-echo "2. Check Kargo stages: kubectl get stages -n elastic-agent-kargo"
-echo "3. Trigger a promotion or wait for Kargo to detect new images"
+echo "Verifying git credentials setup:"
+echo -n "Annotation: "
+kubectl get secret git-credentials -n elastic-agent-kargo -o jsonpath='{.metadata.annotations.kargo\.akuity\.io/repo-url}'
+echo ""
+echo -n "Label: "
+kubectl get secret git-credentials -n elastic-agent-kargo -o jsonpath='{.metadata.labels.kargo\.akuity\.io/cred-type}'
+echo ""
+echo ""
+echo "If annotation shows: https://github.com/tijnsemmekrot/traces-test"
+echo "Then you're ready to retry the promotion!"
