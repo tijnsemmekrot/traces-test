@@ -65,8 +65,7 @@ spec:
           as: commit
           config:
             path: ./src
-            messageFromSteps:
-              - update-image
+            message: "feat: update elastic-agent image to ${{ imageFrom('000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/elastic-agent').Tag }}"
 
         - uses: git-push
           config:
