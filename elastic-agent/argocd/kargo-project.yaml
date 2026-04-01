@@ -50,8 +50,7 @@ spec:
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout:
-              - fromFreight: true
-                path: ./src # This is the workbench folder
+              - path: ./src # This is the workbench folder
         - uses: git-clear
           config:
             path: ./src
