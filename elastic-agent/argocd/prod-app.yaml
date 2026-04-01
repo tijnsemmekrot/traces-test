@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elastic-agent-prod
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/tijnsemmekrot/localstack-test.git # Update with your repo
+    targetRevision: main
+    path: elastic-agent/environments/prod
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: elastic-agent-prod
+
+  syncPolicy:
+    # Manual sync for prod - promoted by Kargo
+    automated: null
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Health checks
+  ignoreDifferences:
+    - group: apps
+      kind: DaemonSet
+      jsonPointers:
+        - /spec/template/metadata/annotations
