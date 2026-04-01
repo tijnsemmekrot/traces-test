@@ -43,7 +43,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/tijnsemmekrot/traces-test.git
+            repoURL: git@github.com:tijnsemmekrot/traces-test.git
             checkout: [{ branch: kargo-implementation, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
@@ -61,8 +61,6 @@ spec:
           config:
             path: ./src
             targetBranch: kargo-implementation
-            # Explicitly disable branch generation since we're pushing to existing branch
-            generateTargetBranch: false
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-dev, namespace: argocd }]
@@ -83,9 +81,8 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/tijnsemmekrot/traces-test
+            repoURL: git@github.com:tijnsemmekrot/traces-test.git
             checkout: [{ branch: kargo-implementation, path: ./src }]
-            insecureSkipTLSVerify: false
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -102,7 +99,6 @@ spec:
           config:
             path: ./src
             targetBranch: kargo-implementation
-            generateTargetBranch: false
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-staging, namespace: argocd }]
@@ -123,9 +119,8 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/tijnsemmekrot/traces-test
+            repoURL: git@github.com:tijnsemmekrot/traces-test.git
             checkout: [{ branch: kargo-implementation, path: ./src }]
-            insecureSkipTLSVerify: false
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -142,7 +137,6 @@ spec:
           config:
             path: ./src
             targetBranch: kargo-implementation
-            generateTargetBranch: false
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-prod, namespace: argocd }]
