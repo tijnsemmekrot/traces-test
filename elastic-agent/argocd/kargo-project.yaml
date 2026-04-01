@@ -43,7 +43,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: git@github.com:tijnsemmekrot/traces-test.git
+            repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout: [{ branch: kargo-implementation, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
@@ -81,7 +81,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: git@github.com:tijnsemmekrot/traces-test.git
+            repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout: [{ branch: kargo-implementation, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
@@ -119,7 +119,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: git@github.com:tijnsemmekrot/traces-test.git
+            repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout: [{ branch: kargo-implementation, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
