@@ -28,10 +28,8 @@ done
 echo "🚀 Setting up Kargo project..."
 kubectl apply -f "$SCRIPT_DIR/argocd/kargo-project.yaml"
 
-# --- FIX START ---
-REPO_URL_FOR_KARGO="https://github.com/tijnsemmekrot/traces-test"
-
-echo "🔑 Re-aligning Git credentials..."
+# 4. Setup Git credentials for Kargo
+echo "🔑 Setting up Git credentials for Kargo..."
 kubectl delete secret git-credentials -n elastic-agent-kargo --ignore-not-found
 
 kubectl create secret generic git-credentials \
@@ -40,19 +38,18 @@ kubectl create secret generic git-credentials \
   --from-literal=password=${GITHUB_TOKEN} \
   --type=kubernetes.io/basic-auth
 
-# This annotation is what allows Kargo to find this secret during step-4
+# This annotation allows Kargo to find credentials during git-push
 kubectl annotate secret git-credentials \
   --namespace elastic-agent-kargo \
-  kargo.akuity.io/repo-url="${REPO_URL_FOR_KARGO}" \
+  kargo.akuity.io/repo-url="${REPO_URL}" \
   --overwrite
 
 kubectl label secret git-credentials \
   --namespace elastic-agent-kargo \
   kargo.akuity.io/cred-type=git \
   --overwrite
-# --- FIX END ---
 
-# Create ECR credentials for Kargo Warehouse
+# 5. Create ECR credentials for Kargo Warehouse
 echo "🔑 Creating ECR credentials for Kargo Warehouse..."
 kubectl create secret generic ecr-credentials \
   --namespace elastic-agent-kargo \
@@ -65,14 +62,15 @@ kubectl label secret ecr-credentials \
   kargo.akuity.io/cred-type=image \
   --overwrite
 
-# Grant Kargo access to secrets
+# 6. Grant Kargo access to secrets
+echo "🔐 Granting Kargo access to secrets..."
 kubectl create rolebinding kargo-controller-secret-reader \
   --clusterrole=kargo-project-secrets-reader \
   --serviceaccount=kargo:kargo-controller-manager \
   --namespace elastic-agent-kargo \
   --dry-run=client -o yaml | kubectl apply -f -
 
-# 4. Deploy ArgoCD Applications
+# 7. Deploy ArgoCD Applications
 echo "🔄 Deploying ArgoCD applications..."
 kubectl apply -f "$SCRIPT_DIR/argocd/dev-app.yaml"
 kubectl apply -f "$SCRIPT_DIR/argocd/staging-app.yaml"
@@ -82,3 +80,8 @@ echo ""
 echo "========================================"
 echo "✅ Installation Complete!"
 echo "========================================"
+echo ""
+echo "Next steps:"
+echo "1. Verify git credentials: kubectl get secret git-credentials -n elastic-agent-kargo -o jsonpath='{.metadata.annotations.kargo\.akuity\.io/repo-url}'"
+echo "2. Check Kargo stages: kubectl get stages -n elastic-agent-kargo"
+echo "3. Trigger a promotion or wait for Kargo to detect new images"
