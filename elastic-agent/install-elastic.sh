@@ -29,21 +29,21 @@ echo "🚀 Setting up Kargo project..."
 kubectl apply -f "$SCRIPT_DIR/argocd/kargo-project.yaml"
 
 # --- FIX START ---
-# Delete old secret to prevent "immutable field" error
-kubectl delete secret git-credentials --namespace elastic-agent-kargo --ignore-not-found
+REPO_URL_FOR_KARGO="https://github.com/tijnsemmekrot/traces-test"
 
-# Create Git credentials for Kargo
-echo "🔑 Creating Git credentials for Kargo push..."
+echo "🔑 Re-aligning Git credentials..."
+kubectl delete secret git-credentials -n elastic-agent-kargo --ignore-not-found
+
 kubectl create secret generic git-credentials \
   --namespace elastic-agent-kargo \
   --from-literal=username=tijnsemmekrot \
   --from-literal=password=${GITHUB_TOKEN} \
   --type=kubernetes.io/basic-auth
 
-# THE MISSING LINK: This tells Kargo WHICH repo this secret is for
+# This annotation is what allows Kargo to find this secret during step-4
 kubectl annotate secret git-credentials \
   --namespace elastic-agent-kargo \
-  kargo.akuity.io/repo-url="${REPO_URL}" \
+  kargo.akuity.io/repo-url="${REPO_URL_FOR_KARGO}" \
   --overwrite
 
 kubectl label secret git-credentials \
