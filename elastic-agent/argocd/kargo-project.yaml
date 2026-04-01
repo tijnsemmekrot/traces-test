@@ -121,6 +121,8 @@ spec:
         - uses: git-push
           config:
             path: ./src
+            remote: origin
+            targetBranch: kargo-implementation
         - uses: argocd-update
           config:
             apps:
