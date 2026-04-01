@@ -45,6 +45,8 @@ spec:
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout: [{ branch: kargo-implementation, path: ./src }]
+            # Add this line to ensure credentials are available for push
+            insecureSkipTLSVerify: false
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -61,6 +63,7 @@ spec:
           config:
             path: ./src
             targetBranch: kargo-implementation
+            # Explicitly disable branch generation since we're pushing to existing branch
             generateTargetBranch: false
         - uses: argocd-update
           config:
@@ -84,6 +87,7 @@ spec:
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout: [{ branch: kargo-implementation, path: ./src }]
+            insecureSkipTLSVerify: false
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -100,6 +104,7 @@ spec:
           config:
             path: ./src
             targetBranch: kargo-implementation
+            generateTargetBranch: false
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-staging, namespace: argocd }]
@@ -122,6 +127,7 @@ spec:
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
             checkout: [{ branch: kargo-implementation, path: ./src }]
+            insecureSkipTLSVerify: false
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -138,6 +144,7 @@ spec:
           config:
             path: ./src
             targetBranch: kargo-implementation
+            generateTargetBranch: false
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-prod, namespace: argocd }]
