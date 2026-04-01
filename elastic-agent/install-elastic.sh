@@ -2,6 +2,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# IMPORTANT: This MUST match the repoURL in your kargo-project.yaml exactly
 REPO_URL="https://github.com/tijnsemmekrot/traces-test.git"
 
 echo "========================================"
@@ -12,7 +13,7 @@ echo "========================================"
 echo "📦 Creating namespaces..."
 kubectl apply -f "$SCRIPT_DIR/namespaces.yaml"
 
-# 2. Create ECR credentials secret for each environment (for Kube pull secrets)
+# 2. Create ECR credentials secret for each environment
 echo "🔑 Creating ECR credentials for image pull..."
 for ENV in dev staging prod; do
   kubectl create secret docker-registry ecr-credentials \
@@ -23,25 +24,35 @@ for ENV in dev staging prod; do
     --dry-run=client -o yaml | kubectl apply -f -
 done
 
-# 3. Setup Kargo project and credentials
+# 3. Setup Kargo project
 echo "🚀 Setting up Kargo project..."
 kubectl apply -f "$SCRIPT_DIR/argocd/kargo-project.yaml"
 
-# Create Git credentials for Kargo (CRITICAL: cred-type label)
+# --- FIX START ---
+# Delete old secret to prevent "immutable field" error
+kubectl delete secret git-credentials --namespace elastic-agent-kargo --ignore-not-found
+
+# Create Git credentials for Kargo
 echo "🔑 Creating Git credentials for Kargo push..."
 kubectl create secret generic git-credentials \
   --namespace elastic-agent-kargo \
   --from-literal=username=tijnsemmekrot \
   --from-literal=password=${GITHUB_TOKEN} \
-  --type=kubernetes.io/basic-auth \
-  --dry-run=client -o yaml | kubectl apply -f -
+  --type=kubernetes.io/basic-auth
+
+# THE MISSING LINK: This tells Kargo WHICH repo this secret is for
+kubectl annotate secret git-credentials \
+  --namespace elastic-agent-kargo \
+  kargo.akuity.io/repo-url="${REPO_URL}" \
+  --overwrite
 
 kubectl label secret git-credentials \
   --namespace elastic-agent-kargo \
   kargo.akuity.io/cred-type=git \
   --overwrite
+# --- FIX END ---
 
-# Create ECR credentials for Kargo Warehouse (CRITICAL: cred-type label)
+# Create ECR credentials for Kargo Warehouse
 echo "🔑 Creating ECR credentials for Kargo Warehouse..."
 kubectl create secret generic ecr-credentials \
   --namespace elastic-agent-kargo \
