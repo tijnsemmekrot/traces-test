@@ -61,6 +61,7 @@ spec:
           config:
             path: ./src
             targetBranch: kargo-implementation
+            generateTargetBranch: false
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-dev, namespace: argocd }]
