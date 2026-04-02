@@ -11,8 +11,8 @@ from opentelemetry.sdk.trace.sampling import TraceIdRatioBased
 resource = Resource.create({"service.name": "account-service"})
 
 otlp_exporter = OTLPSpanExporter(
-    endpoint="http://otel-collector-agent.default.svc.cluster.local:4317"
-    # endpoint="http://jaeger.jaeger.svc.cluster.local:4318/v1/traces"
+    # endpoint="http://otel-collector-agent.default.svc.cluster.local:4317"
+    endpoint="http://jaeger.jaeger.svc.cluster.local:4318/v1/traces"
 )
 sampler = TraceIdRatioBased(0.1)
 provider = TracerProvider(resource=resource, sampler=sampler)
