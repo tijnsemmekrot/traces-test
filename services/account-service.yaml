@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/tijnsemmekrot/traces-test.git
-    targetRevision: HEAD
+    targetRevision: kargo-implementation
     path: environments/dev/account-service
   destination:
     server: https://kubernetes.default.svc
