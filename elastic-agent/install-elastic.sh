@@ -28,48 +28,6 @@ done
 echo "🚀 Setting up Kargo project..."
 kubectl apply -f "$SCRIPT_DIR/argocd/kargo-project.yaml"
 
-# 4. Setup Git credentials for Kargo
-echo "🔑 Setting up Git credentials for Kargo..."
-kubectl delete secret git-credentials -n elastic-agent-kargo --ignore-not-found
-
-kubectl create secret generic git-credentials \
-  --namespace elastic-agent-kargo \
-  --from-literal=username=tijnsemmekrot \
-  --from-literal=password=${GITHUB_TOKEN} \
-  --type=kubernetes.io/basic-auth
-
-# CRITICAL: URL must match exactly what's in kargo-project.yaml (no .git suffix)
-kubectl annotate secret git-credentials \
-  --namespace elastic-agent-kargo \
-  kargo.akuity.io/repo-url="${REPO_URL}" \
-  --overwrite
-
-kubectl label secret git-credentials \
-  --namespace elastic-agent-kargo \
-  kargo.akuity.io/cred-type=git \
-  --overwrite
-
-# 5. Create ECR credentials for Kargo Warehouse
-echo "🔑 Creating ECR credentials for Kargo Warehouse..."
-kubectl create secret generic ecr-credentials \
-  --namespace elastic-agent-kargo \
-  --from-literal=username=AWS \
-  --from-literal=password=000000000000-auth-token \
-  --dry-run=client -o yaml | kubectl apply -f -
-
-kubectl label secret ecr-credentials \
-  --namespace elastic-agent-kargo \
-  kargo.akuity.io/cred-type=image \
-  --overwrite
-
-# 6. Grant Kargo access to secrets
-echo "🔐 Granting Kargo access to secrets..."
-kubectl create rolebinding kargo-controller-secret-reader \
-  --clusterrole=kargo-project-secrets-reader \
-  --serviceaccount=kargo:kargo-controller-manager \
-  --namespace elastic-agent-kargo \
-  --dry-run=client -o yaml | kubectl apply -f -
-
 # 7. Deploy ArgoCD Applications
 echo "🔄 Deploying ArgoCD applications..."
 kubectl apply -f "$SCRIPT_DIR/argocd/dev-app.yaml"
