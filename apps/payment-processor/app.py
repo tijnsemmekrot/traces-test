@@ -8,6 +8,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 from opentelemetry.propagate import extract, inject
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace.sampling import TraceIdRatioBased
+from opentelemetry.trace import Status, StatusCode
 
 resource = Resource.create({"service.name": "payment-processor"})
 os.environ["OTEL_EXPORTER_OTLP_CERTIFICATE"] = ""
@@ -39,33 +40,50 @@ def home():
 
 @app.route("/process-payment")
 def process_payment():
-    context = extract(request.headers)  # ← Extract traceparent
-    with tracer.start_as_current_span("process-payment", context=context):
-        # Step 1: Check for fraud
+    context = extract(request.headers)
+    with tracer.start_as_current_span("process-payment", context=context) as root_span:
         headers = {}
-        inject(headers)  # ← Inject traceparent for downstream service
-        fraud_response = requests.get(
-            "http://fraud-detector:8080/check-fraud", headers=headers
-        )
-        if fraud_response.status_code != 200:
-            print("Payment blocked - fraud detected")
-            return "Payment blocked: Fraud detected", 403
+        inject(headers)
 
-        # Step 2: Verify account balance
-        balance_response = requests.get(
-            "http://account-service:8080/verify-balance", headers=headers
-        )
-        if balance_response.status_code != 200:
-            print("Payment failed - insufficient balance")
-            return "Payment failed: Insufficient balance", 402
+        # --- SUB-SPAN 1: FRAUD CHECK ---
+        with tracer.start_as_current_span("check-fraud-logic") as sub_span:
+            try:
+                res = requests.get(
+                    "http://fraud-detector:8080/check-fraud", headers=headers, timeout=5
+                )
+                sub_span.set_attribute("fraud.service.status", res.status_code)
+                if res.status_code != 200:
+                    sub_span.set_status(Status(StatusCode.ERROR))
+                    return "Blocked", 403
+            except Exception as e:
+                sub_span.record_exception(e)
+                return "Fraud Service Down", 503
 
-        # Step 3: Send notification
-        requests.get(
-            "http://notification-service:8080/send-notification", headers=headers
-        )
+        # --- SUB-SPAN 2: BALANCE VERIFICATION ---
+        with tracer.start_as_current_span("verify-balance-logic") as sub_span:
+            # You can add logic here that isn't just an HTTP call
+            # e.g., some complex calculation before the request
+            res = requests.get(
+                "http://account-service:8080/verify-balance", headers=headers, timeout=5
+            )
+            if res.status_code != 200:
+                sub_span.set_status(Status(StatusCode.ERROR))
+                return "Insufficient Funds", 402
 
-        print("Payment processed successfully")
-        return "Payment processed successfully", 200
+        with tracer.start_as_current_span("send-notification") as sub_span:
+            try:
+                res = requests.get(
+                    "http://notification-service:8080/send-notification",
+                    headers=headers,
+                )
+                if res.status_code != 200:
+                    sub_span.set_status(Status(StatusCode.ERROR))
+                    return "Notification Service Down", 403
+            except Exception as e:
+                sub_span.record_exception(e)
+                return "Notification Service Down", 503
+
+        return "Success", 200
 
 
 @app.route("/health")
