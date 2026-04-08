@@ -1,4 +1,5 @@
 from flask import Flask, request
+import os
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
@@ -9,6 +10,9 @@ import random
 from opentelemetry.sdk.trace.sampling import TraceIdRatioBased
 
 resource = Resource.create({"service.name": "account-service"})
+
+os.environ["OTEL_EXPORTER_OTLP_CERTIFICATE"] = ""
+os.environ["OTEL_EXPORTER_OTLP_INSECURE"] = "true"
 
 # otlp_exporter = OTLPSpanExporter(
 #     # endpoint="http://otel-collector-agent.default.svc.cluster.local:4317"

@@ -13,6 +13,8 @@ from opentelemetry.trace import Status, StatusCode
 from opentelemetry.sdk.trace.sampling import TraceIdRatioBased
 
 resource = Resource.create({"service.name": "payment-requester", "team": "PMSO"})
+os.environ["OTEL_EXPORTER_OTLP_CERTIFICATE"] = ""
+os.environ["OTEL_EXPORTER_OTLP_INSECURE"] = "true"
 
 # otlp_exporter = ConsoleSpanExporter()
 # otlp_exporter = OTLPSpanExporter(
