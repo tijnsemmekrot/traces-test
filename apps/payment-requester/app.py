@@ -5,7 +5,11 @@ import os
 import random
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor, ConsoleSpanExporter
+from opentelemetry.sdk.trace.export import (
+    SimpleSpanProcessor,
+    ConsoleSpanExporter,
+    BatchSpanProcessor,
+)
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.propagate import inject
 from opentelemetry.sdk.resources import Resource
@@ -29,7 +33,8 @@ otlp_exporter = OTLPSpanExporter(
 
 sampler = TraceIdRatioBased(0.1)
 provider = TracerProvider(resource=resource, sampler=sampler)
-processor = SimpleSpanProcessor(otlp_exporter)
+# processor = SimpleSpanProcessor(otlp_exporter)
+processor = BatchSpanProcessor(otlp_exporter)
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer("payment-requester")
