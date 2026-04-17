@@ -16,7 +16,7 @@ spec:
         - name: gitopsRepo
           value: https://github.com/tijnsemmekrot/traces-test.git
         - name: branch
-          value: kargo-implementation
+          value: main
       steps:
         - uses: git-clone
           config:

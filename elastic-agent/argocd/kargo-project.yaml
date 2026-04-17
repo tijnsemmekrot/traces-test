@@ -44,7 +44,7 @@ spec:
         - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
-            checkout: [{ branch: kargo-implementation, path: ./src }]
+            checkout: [{ branch: main, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -60,7 +60,7 @@ spec:
         - uses: git-push
           config:
             path: ./src
-            targetBranch: kargo-implementation
+            targetBranch: main
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-dev, namespace: argocd }]
@@ -82,7 +82,7 @@ spec:
         - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
-            checkout: [{ branch: kargo-implementation, path: ./src }]
+            checkout: [{ branch: main, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -98,7 +98,7 @@ spec:
         - uses: git-push
           config:
             path: ./src
-            targetBranch: kargo-implementation
+            targetBranch: main
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-staging, namespace: argocd }]
@@ -120,7 +120,7 @@ spec:
         - uses: git-clone
           config:
             repoURL: https://github.com/tijnsemmekrot/traces-test
-            checkout: [{ branch: kargo-implementation, path: ./src }]
+            checkout: [{ branch: main, path: ./src }]
         - uses: kustomize-set-image
           as: update-image
           config:
@@ -136,7 +136,7 @@ spec:
         - uses: git-push
           config:
             path: ./src
-            targetBranch: kargo-implementation
+            targetBranch: main
         - uses: argocd-update
           config:
             apps: [{ name: elastic-agent-prod, namespace: argocd }]

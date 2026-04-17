@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/tijnsemmekrot/traces-test.git
-    targetRevision: kargo-implementation
+    targetRevision: main
     path: services/ # <--- Change this from environments/dev/
     directory:
       recurse: true
