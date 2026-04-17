@@ -1,0 +1,27 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: traces-test-warehouse
+  namespace: traces-test
+spec:
+  subscriptions:
+    - image:
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
+        imageSelectionStrategy: Lexical
+    - image:
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
+        imageSelectionStrategy: Lexical
+    - image:
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
+        imageSelectionStrategy: Lexical
+    - image:
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
+        imageSelectionStrategy: Lexical
+    - image:
+        repoURL: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+        imagePullSecrets: [{ name: localstack-ecr-creds }]
+        imageSelectionStrategy: Lexical

@@ -5,7 +5,11 @@ import os
 import random
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor, ConsoleSpanExporter
+from opentelemetry.sdk.trace.export import (
+    SimpleSpanProcessor,
+    ConsoleSpanExporter,
+    BatchSpanProcessor,
+)
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.propagate import inject
 from opentelemetry.sdk.resources import Resource
@@ -13,15 +17,24 @@ from opentelemetry.trace import Status, StatusCode
 from opentelemetry.sdk.trace.sampling import TraceIdRatioBased
 
 resource = Resource.create({"service.name": "payment-requester", "team": "PMSO"})
+os.environ["OTEL_EXPORTER_OTLP_CERTIFICATE"] = ""
+os.environ["OTEL_EXPORTER_OTLP_INSECURE"] = "true"
 
 # otlp_exporter = ConsoleSpanExporter()
+# otlp_exporter = OTLPSpanExporter(
+#     # endpoint="http://otel-collector-agent.default.svc.cluster.local:4317"
+#     endpoint="http://jaeger.jaeger.svc.cluster.local:4318/v1/traces"
+# )
+
 otlp_exporter = OTLPSpanExporter(
-    endpoint="http://jaeger.jaeger.svc.cluster.local:4318/v1/traces"
+    endpoint="https://apm-apm-http.elastic-stack.svc:8200/v1/traces",
+    headers={"Authorization": "Bearer my-super-secret-token"},
 )
 
 sampler = TraceIdRatioBased(0.1)
 provider = TracerProvider(resource=resource, sampler=sampler)
-processor = SimpleSpanProcessor(otlp_exporter)
+# processor = SimpleSpanProcessor(otlp_exporter)
+processor = BatchSpanProcessor(otlp_exporter)
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer("payment-requester")

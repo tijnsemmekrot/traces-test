@@ -7,8 +7,8 @@ spec:
   project: default
   source:
     repoURL: https://github.com/tijnsemmekrot/traces-test.git
-    targetRevision: HEAD
-    path: apps/fraud-detector
+    targetRevision: kargo-implementation
+    path: environments/dev/fraud-detector
   destination:
     server: https://kubernetes.default.svc
     namespace: default

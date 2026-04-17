@@ -1,0 +1,82 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: traces-test
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: traces-test-warehouse
+      sources:
+        direct: true
+  promotionTemplate:
+    spec:
+      vars:
+        - name: gitopsRepo
+          value: https://github.com/tijnsemmekrot/traces-test.git
+        - name: branch
+          value: kargo-implementation
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: ${{ vars.gitopsRepo }}
+            checkout:
+              - branch: ${{ vars.branch }}
+                path: repo
+
+        # Service 1: account-service
+        - uses: kustomize-set-image
+          as: update-account-service
+          config:
+            path: repo/environments/dev/account-service
+            images:
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service
+                tag: ${{ (freight.images | filter(i, i.repoURL == "000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-account-service"))[0].tag }}
+
+        # Service 2: fraud-detector
+        - uses: kustomize-set-image
+          as: update-fraud-detector
+          config:
+            path: repo/environments/dev/fraud-detector
+            images:
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector
+                tag: ${{ (freight.images | filter(i, i.repoURL == "000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-fraud-detector"))[0].tag }}
+
+        # Service 3: notification-service
+        - uses: kustomize-set-image
+          as: update-notification-service
+          config:
+            path: repo/environments/dev/notification-service
+            images:
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service
+                tag: ${{ (freight.images | filter(i, i.repoURL == "000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-notification-service"))[0].tag }}
+
+        # Service 4: payment-processor
+        - uses: kustomize-set-image
+          as: update-payment-processor
+          config:
+            path: repo/environments/dev/payment-processor
+            images:
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor
+                tag: ${{ (freight.images | filter(i, i.repoURL == "000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-processor"))[0].tag }}
+
+        # Service 5: payment-requester
+        - uses: kustomize-set-image
+          as: update-payment-requester
+          config:
+            path: repo/environments/dev/payment-requester
+            images:
+              - image: 000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester
+                tag: ${{ (freight.images | filter(i, i.repoURL == "000000000000.dkr.ecr.eu-west-1.localhost.localstack.cloud:4566/traces-test-payment-requester"))[0].tag }}
+
+        - uses: git-commit
+          as: commit
+          config:
+            path: repo
+            message: "Promote Freight to dev: updated image tags"
+
+        - uses: git-push
+          config:
+            path: repo
+            branch: ${{ vars.branch }}

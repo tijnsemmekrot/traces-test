@@ -1,0 +1,76 @@
+# Base Helm values for Elastic Agent
+# Image will be overridden by Kustomize per environment
+
+image:
+  repository: 000000000000.dkr.ecr.us-east-1.amazonaws.com/elastic-agent
+  tag: 8.12.0 # Will be managed by Kustomize
+  pullPolicy: IfNotPresent
+
+# Elastic Agent configuration
+agent:
+  enabled: true
+
+outputs:
+  default:
+    type: elasticsearch
+    hosts:
+      - "https://elasticsearch:9200"
+    username: "elastic"
+    password: "changeme" # Use secret in production
+
+# Fleet Server configuration (optional)
+fleet:
+  enabled: false
+
+# Kubernetes integration
+kubernetes:
+  enabled: true
+
+# System integration
+system:
+  enabled: true
+
+# Resource limits
+resources:
+  limits:
+    memory: 1000Mi
+    cpu: 200m
+  requests:
+    memory: 400Mi
+    cpu: 100m
+
+# DaemonSet configuration (runs on all nodes)
+daemonset:
+  enabled: true
+
+# Tolerations for node types
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+
+# Service Account
+serviceAccount:
+  create: true
+  name: elastic-agent
+
+# Security context
+securityContext:
+  runAsUser: 0
+  privileged: false
+  capabilities:
+    add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    drop:
+      - ALL
+
+# Additional volumes
+volumes: []
+
+# Additional volume mounts
+volumeMounts: []
+
+# Environment-specific configs will be overlaid
+env: []

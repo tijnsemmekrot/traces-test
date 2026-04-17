@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: elastic-agent-dev
+
+helmCharts:
+  - name: elastic-agent
+    repo: https://helm.elastic.co
+    version: 8.12.0
+    releaseName: elastic-agent
+    namespace: elastic-agent-dev
+    valuesFile: values.yaml
+    includeCRDs: true
+
+# Base resources
+resources: []
+
+# Image that will be replaced per environment
+images:
+  - name: docker.elastic.co/beats/elastic-agent
+    newName: 000000000000.dkr.ecr.us-east-1.amazonaws.com/elastic-agent
+    newTag: 8.12.0
+
+# Common labels
+commonLabels:
+  app.kubernetes.io/managed-by: argocd
+  app.kubernetes.io/part-of: elastic-agent
